@@ -168,6 +168,23 @@ class TestSignupEndpoint:
         activities_response = client.get("/activities")
         activities_data = activities_response.json()
         assert "newartist@mergington.edu" in activities_data["Art Studio Workshop"]["participants"]
+    
+    def test_signup_activity_at_capacity(self, client):
+        """Test that signup fails when activity is at max capacity"""
+        # Fill up Chess Club (max 12 participants, currently has 2)
+        for i in range(10):
+            response = client.post(
+                f"/activities/Chess Club/signup?email=student{i}@mergington.edu"
+            )
+            assert response.status_code == 200
+        
+        # Try to add one more beyond capacity
+        response = client.post(
+            "/activities/Chess Club/signup?email=rejected@mergington.edu"
+        )
+        assert response.status_code == 400
+        data = response.json()
+        assert "full" in data["detail"].lower()
 
 
 class TestUnregisterEndpoint:
