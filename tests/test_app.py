@@ -3,6 +3,7 @@ Tests for the High School Management System API
 """
 
 import pytest
+from copy import deepcopy
 from fastapi.testclient import TestClient
 from src.app import app, activities
 from copy import deepcopy
