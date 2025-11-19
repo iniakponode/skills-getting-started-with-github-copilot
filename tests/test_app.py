@@ -3,6 +3,7 @@ Tests for the High School Management System API
 """
 
 import pytest
+from copy import deepcopy
 from fastapi.testclient import TestClient
 from src.app import app, activities
 
@@ -16,69 +17,12 @@ def client():
 @pytest.fixture(autouse=True)
 def reset_activities():
     """Reset activities data before each test"""
-    # Store original state
-    original_activities = {
-        "Chess Club": {
-            "description": "Learn strategies and compete in chess tournaments",
-            "schedule": "Fridays, 3:30 PM - 5:00 PM",
-            "max_participants": 12,
-            "participants": ["michael@mergington.edu", "daniel@mergington.edu"]
-        },
-        "Programming Class": {
-            "description": "Learn programming fundamentals and build software projects",
-            "schedule": "Tuesdays and Thursdays, 3:30 PM - 4:30 PM",
-            "max_participants": 20,
-            "participants": ["emma@mergington.edu", "sophia@mergington.edu"]
-        },
-        "Gym Class": {
-            "description": "Physical education and sports activities",
-            "schedule": "Mondays, Wednesdays, Fridays, 2:00 PM - 3:00 PM",
-            "max_participants": 30,
-            "participants": ["john@mergington.edu", "olivia@mergington.edu"]
-        },
-        "Soccer Team": {
-            "description": "Team practices and inter-school soccer matches",
-            "schedule": "Tuesdays and Thursdays, 4:00 PM - 5:30 PM",
-            "max_participants": 18,
-            "participants": ["liam@mergington.edu", "ava@mergington.edu"]
-        },
-        "Swim Club": {
-            "description": "Swim training and endurance development",
-            "schedule": "Mondays and Wednesdays, 3:30 PM - 4:45 PM",
-            "max_participants": 16,
-            "participants": ["noah@mergington.edu", "amelia@mergington.edu"]
-        },
-        "Drama Club": {
-            "description": "Acting workshops and school play productions",
-            "schedule": "Wednesdays, 3:30 PM - 5:00 PM",
-            "max_participants": 25,
-            "participants": ["harper@mergington.edu", "lily@mergington.edu"]
-        },
-        "Art Studio Workshop": {
-            "description": "Explore painting, sculpture, and mixed media projects",
-            "schedule": "Fridays, 2:30 PM - 4:30 PM",
-            "max_participants": 15,
-            "participants": ["jackson@mergington.edu", "mia@mergington.edu"]
-        },
-        "Math Olympiad Team": {
-            "description": "Problem-solving sessions for competitive math contests",
-            "schedule": "Mondays, 3:30 PM - 5:00 PM",
-            "max_participants": 20,
-            "participants": ["ethan@mergington.edu", "isabella@mergington.edu"]
-        },
-        "Science Research Society": {
-            "description": "Collaborative scientific research and fair preparation",
-            "schedule": "Thursdays, 3:30 PM - 5:00 PM",
-            "max_participants": 22,
-            "participants": ["logan@mergington.edu", "sofia@mergington.edu"]
-        }
-    }
+    # Store a deep copy of the original state
+    original_activities = deepcopy(activities)
+    
+    yield
     
     # Reset to original state
-    activities.clear()
-    activities.update(original_activities)
-    yield
-    # Clean up after test
     activities.clear()
     activities.update(original_activities)
 
