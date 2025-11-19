@@ -63,16 +63,29 @@ document.addEventListener("DOMContentLoaded", () => {
           participantsSection.appendChild(p);
         }
 
-        activityCard.innerHTML = `
-          <h4></h4>
-          <p></p>
-          <p><strong>Schedule:</strong> </p>
-          <p><strong>Availability:</strong> </p>
-        `;
-        activityCard.querySelector("h4").textContent = name;
-        activityCard.querySelectorAll("p")[0].textContent = details.description;
-        activityCard.querySelectorAll("p")[1].innerHTML = `<strong>Schedule:</strong> ${details.schedule}`;
-        activityCard.querySelectorAll("p")[2].innerHTML = `<strong>Availability:</strong> ${spotsLeft} spots left`;
+        // Build activity card content safely
+        const h4 = document.createElement("h4");
+        h4.textContent = name;
+        activityCard.appendChild(h4);
+
+        const descP = document.createElement("p");
+        descP.textContent = details.description;
+        activityCard.appendChild(descP);
+
+        const scheduleP = document.createElement("p");
+        const scheduleStrong = document.createElement("strong");
+        scheduleStrong.textContent = "Schedule:";
+        scheduleP.appendChild(scheduleStrong);
+        scheduleP.appendChild(document.createTextNode(" " + details.schedule));
+        activityCard.appendChild(scheduleP);
+
+        const availP = document.createElement("p");
+        const availStrong = document.createElement("strong");
+        availStrong.textContent = "Availability:";
+        availP.appendChild(availStrong);
+        availP.appendChild(document.createTextNode(` ${spotsLeft} spots left`));
+        activityCard.appendChild(availP);
+
         activityCard.appendChild(participantsSection);
 
         activitiesList.appendChild(activityCard);
