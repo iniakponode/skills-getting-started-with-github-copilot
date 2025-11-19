@@ -136,6 +136,7 @@ class TestSignupEndpoint:
         assert response.status_code == 400
         assert "email" in response.json()["detail"].lower()
         data = response.json()
+        assert data["detail"] == "Email is required"
         assert "email" in data["detail"].lower()
     
     def test_signup_invalid_email_format(self, client):
@@ -150,6 +151,9 @@ class TestSignupEndpoint:
         assert response.status_code == 400
         assert "email" in response.json()["detail"].lower()
         data = response.json()
+        assert data["detail"] == "Invalid email format"
+    
+    def test_signup_missing_email_parameter(self, client):
         assert "email" in data["detail"].lower()
     
     def test_signup_missing_email(self, client):
