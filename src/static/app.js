@@ -23,30 +23,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
         
-        // Create participants list
-        const participantsList = details.participants.length > 0
-          ? `<ul class="participants-list">
-              ${details.participants.map(email => `
-                <li class="participant-item">
-                  <span class="participant-email">${email}</span>
-                  <button class="delete-participant" data-activity="${name}" data-email="${email}" title="Remove participant">
-                    ✕
-                  </button>
-                </li>
-              `).join('')}
-            </ul>`
-          : '<p class="no-participants">No participants yet</p>';
+        // Create participants section safely
+        const participantsSection = document.createElement("div");
+        participantsSection.className = "participants-section";
+        const participantsHeader = document.createElement("p");
+        participantsHeader.className = "participants-header";
+        const strong = document.createElement("strong");
+        strong.textContent = "Current Participants:";
+        participantsHeader.appendChild(strong);
+        participantsSection.appendChild(participantsHeader);
+
+        if (details.participants.length > 0) {
+          const ul = document.createElement("ul");
+          ul.className = "participants-list";
+          details.participants.forEach(email => {
+            const li = document.createElement("li");
+            li.className = "participant-item";
+
+            const span = document.createElement("span");
+            span.className = "participant-email";
+            span.textContent = email;
+
+            const button = document.createElement("button");
+            button.className = "delete-participant";
+            button.dataset.activity = name;
+            button.dataset.email = email;
+            button.title = "Remove participant";
+            button.textContent = "✕";
+
+            li.appendChild(span);
+            li.appendChild(button);
+            ul.appendChild(li);
+          });
+          participantsSection.appendChild(ul);
+        } else {
+          const p = document.createElement("p");
+          p.className = "no-participants";
+          p.textContent = "No participants yet";
+          participantsSection.appendChild(p);
+        }
 
         activityCard.innerHTML = `
-          <h4>${name}</h4>
-          <p>${details.description}</p>
-          <p><strong>Schedule:</strong> ${details.schedule}</p>
-          <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
-          <div class="participants-section">
-            <p class="participants-header"><strong>Current Participants:</strong></p>
-            ${participantsList}
-          </div>
+          <h4></h4>
+          <p></p>
+          <p><strong>Schedule:</strong> </p>
+          <p><strong>Availability:</strong> </p>
         `;
+        activityCard.querySelector("h4").textContent = name;
+        activityCard.querySelectorAll("p")[0].textContent = details.description;
+        activityCard.querySelectorAll("p")[1].innerHTML = `<strong>Schedule:</strong> ${details.schedule}`;
+        activityCard.querySelectorAll("p")[2].innerHTML = `<strong>Availability:</strong> ${spotsLeft} spots left`;
+        activityCard.appendChild(participantsSection);
 
         activitiesList.appendChild(activityCard);
 
