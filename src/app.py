@@ -104,7 +104,11 @@ def get_activities():
 def signup_for_activity(activity_name: str, email: str):
     """Sign up a student for an activity"""
     # Validate email format
-    validate_email(email)
+    if not email or not email.strip():
+        raise HTTPException(status_code=400, detail="Email cannot be empty")
+    
+    if "@" not in email:
+        raise HTTPException(status_code=400, detail="Invalid email format")
     
     # Validate activity exists
     if activity_name not in activities:
@@ -130,7 +134,11 @@ def signup_for_activity(activity_name: str, email: str):
 def unregister_from_activity(activity_name: str, email: str):
     """Unregister a student from an activity"""
     # Validate email format
-    validate_email(email)
+    if not email or not email.strip():
+        raise HTTPException(status_code=400, detail="Email cannot be empty")
+    
+    if "@" not in email:
+        raise HTTPException(status_code=400, detail="Invalid email format")
     
     # Validate activity exists
     if activity_name not in activities:

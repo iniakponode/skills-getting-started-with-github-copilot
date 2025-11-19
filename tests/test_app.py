@@ -134,6 +134,8 @@ class TestSignupEndpoint:
         response = client.post("/activities/Chess Club/signup?email=")
         assert response.status_code == 400
         assert "email" in response.json()["detail"].lower()
+        data = response.json()
+        assert "email" in data["detail"].lower()
     
     def test_signup_invalid_email_format(self, client):
         """Test signup with invalid email format"""
@@ -146,6 +148,13 @@ class TestSignupEndpoint:
         response = client.post("/activities/Chess Club/signup?email=invalidemail.com")
         assert response.status_code == 400
         assert "email" in response.json()["detail"].lower()
+        data = response.json()
+        assert "email" in data["detail"].lower()
+    
+    def test_signup_missing_email(self, client):
+        """Test signup with missing email query parameter"""
+        response = client.post("/activities/Chess Club/signup")
+        assert response.status_code == 422  # FastAPI returns 422 for missing required parameters
 
 
 class TestUnregisterEndpoint:
